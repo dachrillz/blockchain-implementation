@@ -3,7 +3,7 @@
 ##############################################################
 
 from . import dispatch_map
-
+from .exceptions import InvalidTransactionError
 from collections import deque
 
 class Stack(deque):
@@ -20,6 +20,7 @@ class ScriptMachine:
         self.instruction_pointer = 0
         self.code = code
         self.dispatch_map = dispatch_map.dispatch_map
+        self.execution_successful = False
 
     def set_code(self, code):
         self.code = code
@@ -44,10 +45,21 @@ class ScriptMachine:
         return self.data_stack.top
 
     def run(self):
+        #reset
+        self.execution_successful = False
+
         while self.instruction_pointer < len(self.code):
-            opcode = self.code[self.instruction_pointer]
-            self.instruction_pointer += 1
-            self.dispatch(opcode)
+            try:
+                opcode = self.code[self.instruction_pointer]
+                self.instruction_pointer += 1
+                self.dispatch(opcode)
+            except RuntimeError("Invalid Transaction Fired") as e:
+                #invalid transaction
+                break
+
+        if self.peek() is not 0:
+            self.execution_successful = True
+
 
     def dispatch(self, op):
         if op in self.dispatch_map:

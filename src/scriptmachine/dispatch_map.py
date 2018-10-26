@@ -78,6 +78,39 @@ def op_push_15(this):
 def op_push_16(this):
     this.push(0x10)
 
+#################################################
+# Conditional Flow Control
+##################################################
+
+def op_nop(this):
+    pass
+
+def op_ver(this):
+    raise NotImplementedError
+
+def op_if(this):
+    raise NotImplementedError
+
+def op_notif(this):
+    raise NotImplementedError
+
+def op_verif(this):
+    raise NotImplementedError
+
+def op_vernotif(this):
+    raise NotImplementedError
+
+def op_else(this):
+    raise NotImplementedError
+
+def op_endif(this):
+    raise NotImplementedError
+
+def op_verify(this):
+    raise NotImplementedError
+
+def op_return(this):
+    raise NotImplementedError
 
 #################################################
 # Arithmetic operations
@@ -198,6 +231,17 @@ dispatch_map = {
     OP_MIN              : op_min,
     OP_MAX              : op_max,
     OP_WITHIN           : op_within,
+
+    OP_NOP              : op_nop,
+    OP_VER              : op_ver,
+    OP_IF               : op_if,
+    OP_NOTIF            : op_notif,
+    OP_VERIF            : op_verif,
+    OP_VERNOTIF         : op_vernotif,
+    OP_ELSE             : op_else,
+    OP_ENDIF            : op_endif,
+    OP_VERIFY           : op_verify,
+    OP_RETURN           : op_return,
 }
 
 

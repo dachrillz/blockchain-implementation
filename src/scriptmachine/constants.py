@@ -90,9 +90,9 @@ OP_PUSHDATA2 = 0x4d #The next to script bytes contain N, push the following N by
 OP_PUSHDATA4 = 0x4e #The next four scipt bytes contain N, push the following N bytes onto the stack
 OP_1NEGATE = 0x4f   #Push the value "-1" into the stack
 OP_RESERVED = 0x50 #Halt - Invalid transaction unless found in an unexecuted OP_IF clause
+
 OP_TRUE = 0x51 #Push the value "1" onto the stack
 OP_1 = 0x51
-
 OP_2 = 0x52 #Push the value 2 onto the stack
 OP_3 = 0x53 #Push the value 3 onto the stack
 OP_4 = 0x54 #Push the value 4 onto the stack
@@ -110,10 +110,19 @@ OP_15 = 0x5f #Push the value 15 onto the stack
 OP_16 = 0x60 #Push the value 16 onto the stack
 
 ##############################################################
-###
 ### Conditional Flow
-###
 ##############################################################
+
+OP_NOP = 0x61 #Do Nothing
+OP_VER = 0x62 #Halt - invalid transaction unless found in an unexecuted OP_IF clause.
+OP_IF = 0x63 #Execute the statements followin if top of stack is not 0
+OP_NOTIF = 0x64 #Execute the statements if top of stack is 0
+OP_VERIF = 0x65 #Halt - invalid transaction
+OP_VERNOTIF = 0x66 #Halt - invalid transaction
+OP_ELSE = 0x67 #Execute only if the previous statements were not executed
+OP_ENDIF = 0x68 #End the OP_IF,OP_NOTIF,OP_ELSE block
+OP_VERIFY = 0x69 #Check the top of the stack, halt and invalidate transaction if not True
+OP_RETURN = 0x6a #Halt and invalidate transaction
 
 ##############################################################
 ###
