@@ -9,4 +9,8 @@ install:
 
 script:
     - pytest
-    - pytest --cov=./
+    - coverage run -m py.test
+
+after_success:
+- codecov
+
