@@ -1,0 +1,208 @@
+#This map contains a reference for each opcode corresponding python function.
+
+from .constants import *
+
+#################################################
+# Stack Operations
+##################################################
+
+def op_1_negate(this):
+    '''
+    Push value -1 onto stack
+    '''
+    this.push(-0x1)
+
+def op_reserved():
+    raise NotImplementedError
+
+#Push data
+def op_pushdata1():
+    raise NotImplementedError
+def op_pushdata2():
+    raise NotImplementedError
+def op_pushdata4():
+    raise NotImplementedError
+
+#################################################
+# Push small numbers onto stack.
+##################################################
+
+def op_push_0(this):
+    this.push(0x0)
+
+def op_push_1(this):
+    this.push(0x1)
+
+def op_push_2(this):
+    this.push(0x2)
+
+def op_push_3(this):
+    this.push(0x3)
+
+def op_push_4(this):
+    this.push(0x4)
+
+def op_push_5(this):
+    this.push(0x5)
+
+def op_push_6(this):
+    this.push(0x6)
+
+def op_push_7(this):
+    this.push(0x7)
+
+def op_push_8(this):
+    this.push(0x8)
+
+def op_push_9(this):
+    this.push(0x9)
+
+def op_push_10(this):
+    this.push(0xa)
+
+def op_push_11(this):
+    this.push(0xb)
+
+def op_push_12(this):
+    this.push(0xc)
+
+def op_push_13(this):
+    this.push(0xd)
+
+def op_push_14(this):
+    this.push(0xe)
+
+def op_push_15(this):
+    this.push(0xf)
+
+def op_push_16(this):
+    this.push(0x10)
+
+
+#################################################
+# Arithmetic operations
+##################################################
+
+def op_1add(this):
+    raise NotImplementedError
+
+def op_1sub(this):
+    raise NotImplementedError
+def op_negate(this):
+    raise NotImplementedError
+
+def op_abs(this):
+    raise NotImplementedError
+
+def op_not(this):
+    raise NotImplementedError
+
+def op_0notequal(this):
+    raise NotImplementedError
+
+def op_add(this):
+    l = this.pop()
+    r = this.pop()
+    this.push(l+r)
+
+def op_sub(this):
+    raise NotImplementedError
+
+def op_booland(this):
+    raise NotImplementedError
+
+def op_boolor(this):
+    raise NotImplementedError
+
+def op_numequal(this):
+    l = this.pop()
+    r = this.pop()
+    this.push(l==r)
+
+def op_numequalverify(this):
+    raise NotImplementedError
+
+def op_numnotequal(this):
+    raise NotImplementedError
+
+def op_lessthan(this):
+    raise NotImplementedError
+
+def op_greaterthan(this):
+    raise NotImplementedError
+
+def op_lessthanorequal(this):
+    raise NotImplementedError
+
+def op_greaterthanorequal(this):
+    raise NotImplementedError
+
+def op_min(this):
+    raise NotImplementedError
+
+def op_max(this):
+    raise NotImplementedError
+
+def op_within(this):
+    raise NotImplementedError
+
+dispatch_map = {
+    OP_FALSE : op_push_0,
+    OP_TRUE  : op_push_1,
+    OP_1NEGATE : op_1_negate,
+    OP_RESERVED : op_reserved,
+
+    #Push data
+    OP_PUSHDATA1 : op_pushdata1,
+    OP_PUSHDATA2 : op_pushdata2,
+    OP_PUSHDATA4 : op_pushdata4,
+
+    #push small numbers onto stack
+    OP_0 : op_push_0,
+    OP_1 : op_push_1,
+    OP_2 : op_push_2,
+    OP_3 : op_push_3,
+    OP_4 : op_push_4,
+    OP_5 : op_push_5,
+    OP_6 : op_push_6,
+    OP_7 : op_push_7,
+    OP_8 : op_push_8,
+    OP_9 : op_push_9,
+    OP_10 : op_push_10,
+    OP_11 : op_push_11,
+    OP_12 : op_push_12,
+    OP_13 : op_push_13,
+    OP_14 : op_push_14,
+    OP_15 :  op_push_15,
+    OP_16 :  op_push_16,
+
+
+    #arithmetic operations
+    OP_1ADD             : op_1add,
+    OP_1SUB             : op_1sub,
+    OP_NEGATE           : op_negate,
+    OP_ABS              : op_abs,
+    OP_NOT              : op_not,
+    OP_0NOTEQUAL        : op_0notequal,
+    OP_ADD              : op_add,
+    OP_SUB              : op_sub,
+    OP_BOOLAND          : op_booland,
+    OP_BOOLOR           : op_boolor,
+    OP_NUMEQUAL         : op_numequal,
+    OP_NUMEQUALVERIFY   : op_numequalverify,
+    OP_NUMNOTEQUAL      : op_numnotequal,
+    OP_LESSTHAN         : op_lessthan,
+    OP_GREATERTHAN      : op_greaterthan,
+    OP_LESSTHANOREQUAL  : op_lessthanorequal,
+    OP_GREATERTHANOREQUAL : op_greaterthanorequal,
+    OP_MIN              : op_min,
+    OP_MAX              : op_max,
+    OP_WITHIN           : op_within,
+}
+
+
+
+
+
+
+
