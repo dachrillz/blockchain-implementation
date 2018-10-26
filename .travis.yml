@@ -9,4 +9,4 @@ install:
 
 script:
     - pytest
-    - codecov
+    - pytest --cov=./
