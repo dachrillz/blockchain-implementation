@@ -130,7 +130,7 @@ class TestBasicStackOperations(unittest.TestCase):
         self.assertEqual(0, len(self.script_machine.data_stack))
         self.assertTrue(self.script_machine.execution_successful)
 
-    def test_op_notif_go(self):
+    def test_op_notif_go_by(self):
         code = [OP_1,OP_NOTIF,OP_1,OP_ENDIF]
 
         self.script_machine.set_code(code)
@@ -166,7 +166,7 @@ class TestBasicStackOperations(unittest.TestCase):
         self.assertTrue(self.script_machine.execution_successful)
 
 
-    def test_op_else_go(self):
+    def test_op_else_go_2(self):
         code = [OP_0, OP_IF, OP_2, OP_ELSE, OP_3, OP_ENDIF]
 
         self.script_machine.set_code(code)
@@ -186,7 +186,7 @@ class TestBasicStackOperations(unittest.TestCase):
         self.assertEqual(0, len(self.script_machine.data_stack))
         self.assertTrue(self.script_machine.execution_successful)
 
-    def test_op_verify_success(self):
+    def test_op_verify_fail(self):
         code = [OP_1, OP_2, OP_0, OP_VERIFY]
 
         self.script_machine.set_code(code)

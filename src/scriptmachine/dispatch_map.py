@@ -95,8 +95,18 @@ def op_if(this):
 
     if this.pop() is not 0:
         while this.code[this.instruction_pointer] is not OP_ENDIF:
+            if this.code[this.instruction_pointer] is OP_ELSE:
+                while this.code[this.instruction_pointer] is not OP_ENDIF:
+                    this.instruction_pointer += 1
+                else:
+                    return 
+
             if this.run_single_statement() is False:
                 return
+
+        if this.code[this.instruction_pointer] is OP_ELSE:
+            while this.code[this.instruction_pointer] is not OP_ENDIF:
+                    this.instruction_pointer += 1
     else:
         while this.code[this.instruction_pointer] is not OP_ENDIF:
             if this.code[this.instruction_pointer] is OP_ELSE:
