@@ -3,7 +3,6 @@
 ##############################################################
 
 from . import dispatch_map
-from .exceptions import InvalidTransactionError
 from collections import deque
 
 class Stack(deque):
@@ -11,16 +10,19 @@ class Stack(deque):
 
     @property
     def top(self):
+        if len(self) is 0:
+            return 1
         return self[-1]
 
 class ScriptMachine:
     def __init__(self, code=None):
         self.data_stack = Stack()
-        self.return_addr_stack = Stack()
+        self.alternative_stack = Stack()
         self.instruction_pointer = 0
         self.code = code
         self.dispatch_map = dispatch_map.dispatch_map
         self.execution_successful = False
+        self.halted = False
 
     def set_code(self, code):
         self.code = code
@@ -44,21 +46,33 @@ class ScriptMachine:
         """
         return self.data_stack.top
 
+    def halt(self):
+        self.instruction_pointer = len(self.code)
+        self.execution_successful = False
+        self.halted = True
+
+    def run_single_statement(self):
+            opcode = self.code[self.instruction_pointer]
+            self.instruction_pointer += 1
+            self.dispatch(opcode)
+
+            if self.halted:
+                return False
+
     def run(self):
         #reset
         self.execution_successful = False
+        self.halted = False
 
         while self.instruction_pointer < len(self.code):
-            try:
-                opcode = self.code[self.instruction_pointer]
-                self.instruction_pointer += 1
-                self.dispatch(opcode)
-            except RuntimeError("Invalid Transaction Fired") as e:
-                #invalid transaction
+            print(self.data_stack)
+            if self.halted:
                 break
+            self.run_single_statement()
 
-        if self.peek() is not 0:
-            self.execution_successful = True
+        if not self.halted:
+            if self.peek() is not 0:
+                self.execution_successful = True
 
 
     def dispatch(self, op):
@@ -66,3 +80,4 @@ class ScriptMachine:
             self.dispatch_map[op](self) #python has higher order functions, meaning that we can evaluate them here.
         else:
             raise RuntimeError("The opcode: " + str(op) + " is not implemented!")
+

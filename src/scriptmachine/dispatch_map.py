@@ -2,6 +2,8 @@
 
 from .constants import *
 
+import copy
+
 #################################################
 # Stack Operations
 ##################################################
@@ -86,31 +88,151 @@ def op_nop(this):
     pass
 
 def op_ver(this):
-    raise NotImplementedError
+    this.halt()
 
 def op_if(this):
-    raise NotImplementedError
+    #Execute statements following if top os stack is not 0
+
+    if this.pop() is not 0:
+        while this.code[this.instruction_pointer] is not OP_ENDIF:
+            if this.run_single_statement() is False:
+                return
+    else:
+        while this.code[this.instruction_pointer] is not OP_ENDIF:
+            if this.code[this.instruction_pointer] is OP_ELSE:
+                if op_else(this) is False:
+                    return
+            else:
+                this.instruction_pointer += 1
 
 def op_notif(this):
-    raise NotImplementedError
+    #Execute statements following if top os stack is 0
+
+    if this.pop() is 0:
+        while this.code[this.instruction_pointer] is not OP_ENDIF:
+            if this.run_single_statement() is False:
+                return
+    else:
+        while this.code[this.instruction_pointer] is not OP_ENDIF:
+            if this.code[this.instruction_pointer] is OP_ELSE:
+                if op_else(this) is False:
+                    return
+            else:
+                this.instruction_pointer += 1
 
 def op_verif(this):
-    raise NotImplementedError
+    this.halt()
 
 def op_vernotif(this):
-    raise NotImplementedError
+    this.halt()
 
 def op_else(this):
-    raise NotImplementedError
+    while this.code[this.instruction_pointer] is not OP_ENDIF:
+        if this.run_single_statement() is False:
+            return False
 
 def op_endif(this):
-    raise NotImplementedError
+    """
+    Simply pass this one.
+    """
+    pass
 
 def op_verify(this):
-    raise NotImplementedError
+    if this.pop() is 0:
+        this.halt()
 
 def op_return(this):
-    raise NotImplementedError
+    this.halt()
+
+#################################################
+# Stack Operations
+##################################################
+
+def op_toaltstack(this):
+    this.alternative_stack.push(this.pop())
+def op_fromaltstack(this):
+    this.push(this.alternative_stack.pop())
+def op_2drop(this):
+    this.pop()
+    this.pop()
+def op_2dup(this):
+    a,b = this.data_stack[-2], this.data_stack[-1]
+    this.push(a)
+    this.push(b)
+
+def op3dup(this):
+    a,b,c = this.data_stack[-1], this.data_stack[-2], this.data_stack[-3]
+    this.push(c)
+    this.push(b)
+    this.push(a)
+
+def op_2over(this):
+    a,b = this.data_stack[-3], this.data_stack[-4]
+    this.push(b)
+    this.push(a)
+
+def op_2rot(this):
+    a,b = this.data_stack[-6], this.data_stack[-5]
+    del this.data_stack[0] #it feels unnecessary to do this twice
+    del this.data_stack[0] #but the deque wont allow me to delete with slices
+    this.push(a)
+    this.push(b)
+
+def op_2swap(this):
+    a,b = this.pop(), this.pop()
+    c,d = this.pop(), this.pop()
+    this.push(b)
+    this.push(a)
+    this.push(d)
+    this.push(c)
+
+def op_ifdup(this):
+    if this.peek() is not 0:
+        this.push(this.peek())
+
+def op_depth(this):
+    this.push(len(this.data_stack))
+
+def op_drop(this):
+    this.pop()
+
+def op_dup(this):
+    this.push(this.peek())
+
+def op_nip(this):
+    del this.data_stack[-2]
+
+def op_over(this):
+    this.push(this.data_stack[-2])
+
+def op_pick(this):
+    this.push(this.data_stack[this.pop()])
+
+def op_roll(this):
+    a = this.pop()
+    this.push(this.data_stack[a])
+    del this.data_stack[a]
+
+def op_rot(this):
+    a = this.data_stack[-3]
+    del this.data_stack[-3]
+    this.push(a)
+
+def op_swap(this):
+    """
+    To me this conflicts between the description and how other online tools work.
+    Implemented like the other script machines I tested against.
+    """
+    a = this.data_stack[-2]
+    del this.data_stack[-2]
+    this.push(a)
+
+def op_tuck(this):
+    a = this.pop()
+    b = this.pop()
+    this.push(a)
+    this.push(b)
+    this.push(a)
 
 #################################################
 # Arithmetic operations
@@ -242,6 +364,27 @@ dispatch_map = {
     OP_ENDIF            : op_endif,
     OP_VERIFY           : op_verify,
     OP_RETURN           : op_return,
+
+    #Stack operations
+    OP_TOALTSTACK : op_toaltstack,
+    OP_FROMALTSTACK : op_fromaltstack,
+    OP_2DROP : op_2drop,
+    OP_2DUP  : op_2dup,
+    OP_3DUP  : op3dup,
+    OP_2OVER : op_2over,
+    OP_2ROT  : op_2rot,
+    OP_2SWAP : op_2swap,
+    OP_IFDUP : op_ifdup,
+    OP_DEPTH : op_depth,
+    OP_DROP  : op_drop,
+    OP_DUP   : op_dup,
+    OP_NIP   : op_nip,
+    OP_OVER  : op_over,
+    OP_PICK  : op_pick,
+    OP_ROLL  : op_roll,
+    OP_ROT   : op_rot,
+    OP_SWAP  : op_swap,
+    OP_TUCK  : op_tuck,
 }
 
 

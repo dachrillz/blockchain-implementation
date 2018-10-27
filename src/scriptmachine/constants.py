@@ -136,6 +136,25 @@ OP_RETURN = 0x6a #Halt and invalidate transaction
 ###
 ##############################################################
 
+OP_TOALTSTACK = 0x6b #Pop top item from stack and push to alternative stack
+OP_FROMALTSTACK = 0x6c #Pop top item from alternative stack and push to stack
+OP_2DROP = 0x6d #Pop top two stack items
+OP_2DUP = 0x6e #Duplicate top two stack items
+OP_3DUP = 0x6f #Duplicate top three stack items
+OP_2OVER = 0x70 #Copy the third and fourth items in the stack to the top
+OP_2ROT = 0x71 #Move the fifth and sixth items in the stack to the top
+OP_2SWAP = 0x72 #Swap the two top pairs of items in the stack
+OP_IFDUP = 0x73 #Duplicate the top item in the stack if it is not 0
+OP_DEPTH = 0x74 #Count the items on the stack and push the resulting count
+OP_DROP = 0x75 #Pop the top item in the stack
+OP_DUP = 0x76 #Duplicate the top item in the stack
+OP_NIP = 0x77 #Pop the second item in the stack
+OP_OVER = 0x78 #Copy the second item in the stack and push it onto the top
+OP_PICK = 0x79 #Pop value N from top, then copy the Nth item to the top of the stack
+OP_ROLL = 0x7a #Pop value N from top, then move the Nth item to the top of the stack
+OP_ROT = 0x7b #Rotate the top three items in the stack
+OP_SWAP = 0x7c #Swap the top three items in the stack
+OP_TUCK = 0x7d #Copy the top item and insert it between the top and second item.
 
 ##############################################################
 ###
