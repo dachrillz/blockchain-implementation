@@ -162,12 +162,27 @@ OP_TUCK = 0x7d #Copy the top item and insert it between the top and second item.
 ###
 ##############################################################
 
+#OP_CAT = 0x7e #Disabled
+#OP_SUBSTR = 0x7f #Disabled
+#OP_LEFT = 0x80 #Disabled
+#OP_RIGHT = 0x81 #Disabled
+OP_SIZE = 0x82 #Calculate String leghtp of top item and push the result
 
 ##############################################################
 ###
 ### Binary Arithmetic and Conditionals
 ###
 ##############################################################
+
+#OP_INVERT = 0x83 #Disabled
+#OP_AND = 0x84 #Disabled
+#OP_OR = 0x85 #Disabled
+#OP_XOR = 0x86 #Disabled
+OP_EQUAL = 0x87 #Push 1 if top two items are exactly equal, else push 0
+OP_EQUALVERIFY = 0x88 #Same as above, but run OP_VERIFY after to halt if not True
+OP_RESERVED1 = 0x89 #Halt
+OP_RESERVED2 = 0x8a #Halt
+
 
 ##############################################################
 ###

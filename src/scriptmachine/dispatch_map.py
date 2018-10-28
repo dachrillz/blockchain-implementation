@@ -2,8 +2,6 @@
 
 from .constants import *
 
-import copy
-
 #################################################
 # Stack Operations
 ##################################################
@@ -92,18 +90,16 @@ def op_ver(this):
 
 def op_if(this):
     #Execute statements following if top os stack is not 0
-
+    #Should probably be rewritten...
     if this.pop() is not 0:
         while this.code[this.instruction_pointer] is not OP_ENDIF:
             if this.code[this.instruction_pointer] is OP_ELSE:
                 while this.code[this.instruction_pointer] is not OP_ENDIF:
                     this.instruction_pointer += 1
                 else:
-                    return 
-
+                    return
             if this.run_single_statement() is False:
                 return
-
         if this.code[this.instruction_pointer] is OP_ELSE:
             while this.code[this.instruction_pointer] is not OP_ENDIF:
                     this.instruction_pointer += 1
@@ -245,71 +241,154 @@ def op_tuck(this):
     this.push(a)
 
 #################################################
+# String Splice Operations
+##################################################
+
+def op_size(this):
+    """
+    I do not understand this one :P
+    """
+    raise NotImplementedError
+
+#################################################
+#Binary Arithmetic and Conidtional
+##################################################
+
+def op_equal(this):
+    if this.pop() == this.pop():
+        this.push(1)
+    else:
+        this.push(0)
+
+def op_equalverify(this):
+    op_equal(this)
+    op_verify(this)
+
+def op_reserved1(this):
+    this.halt()
+
+def op_reserved2(this):
+    this.halt()
+
+#################################################
 # Arithmetic operations
 ##################################################
 
 def op_1add(this):
-    raise NotImplementedError
+    this.push(this.pop() + 1)
 
 def op_1sub(this):
-    raise NotImplementedError
+    this.push(this.pop() - 1)
+
 def op_negate(this):
-    raise NotImplementedError
+    this.push(-1 * this.pop())
 
 def op_abs(this):
-    raise NotImplementedError
+    if this.peek() < 1:
+        this.push(-1 * this.pop())
 
 def op_not(this):
-    raise NotImplementedError
+    a = this.pop()
+    if a is 0:
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_0notequal(this):
-    raise NotImplementedError
+    if this.pop() is 0:
+        this.push(0)
+    else:
+        this.push(1)
 
 def op_add(this):
-    l = this.pop()
-    r = this.pop()
-    this.push(l+r)
+    this.push(this.pop() + this.pop())
 
 def op_sub(this):
-    raise NotImplementedError
+    a = this.pop()
+    this.push(this.pop() - a)
 
 def op_booland(this):
-    raise NotImplementedError
+    a = this.pop()
+    b = this.pop()
+    if a is not 0 and b is not 0:
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_boolor(this):
-    raise NotImplementedError
+    if this.pop() is not 0 or this.pop() is not 0:
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_numequal(this):
-    l = this.pop()
-    r = this.pop()
-    this.push(l==r)
+    a = this.pop()
+    b = this.pop()
+    if a is b:
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_numequalverify(this):
-    raise NotImplementedError
+    op_numequal(this)
+    op_verify(this)
 
 def op_numnotequal(this):
-    raise NotImplementedError
+    if this.pop() is not this.pop():
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_lessthan(this):
-    raise NotImplementedError
+    """
+    Stack operations make this flipped!
+    """
+    if this.pop() > this.pop():
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_greaterthan(this):
-    raise NotImplementedError
+    """
+    Stack operations make this flipped!
+    """
+    if this.pop() < this.pop():
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_lessthanorequal(this):
-    raise NotImplementedError
+    """
+    Stack operations make this flipped!
+    """
+    if this.pop() >= this.pop():
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_greaterthanorequal(this):
-    raise NotImplementedError
+    """
+    Stack operations make this flipped!
+    """
+    if this.pop() <= this.pop():
+        this.push(1)
+    else:
+        this.push(0)
 
 def op_min(this):
-    raise NotImplementedError
+    this.push(min(this.pop(),this.pop()))
 
 def op_max(this):
-    raise NotImplementedError
+    this.push(max(this.pop(),this.pop()))
 
 def op_within(this):
-    raise NotImplementedError
+    c = this.pop()
+    b = this.pop()
+    a = this.pop()
+    if a <=  c < b:
+        this.push(1)
+    else:
+        this.push(0)
 
 dispatch_map = {
     OP_FALSE : op_push_0,
@@ -341,6 +420,14 @@ dispatch_map = {
     OP_15 :  op_push_15,
     OP_16 :  op_push_16,
 
+    #String Operations
+    OP_SIZE : op_size,
+
+    #Binary Arithmetic and Conidtional
+    OP_EQUAL        : op_equal,
+    OP_EQUALVERIFY  : op_equalverify,
+    OP_RESERVED1    : op_reserved1,
+    OP_RESERVED2    : op_reserved2,
 
     #arithmetic operations
     OP_1ADD             : op_1add,
@@ -395,6 +482,7 @@ dispatch_map = {
     OP_ROT   : op_rot,
     OP_SWAP  : op_swap,
     OP_TUCK  : op_tuck,
+
 }
 
 
