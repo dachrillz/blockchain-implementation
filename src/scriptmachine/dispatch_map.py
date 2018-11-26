@@ -1,4 +1,4 @@
-#This map contains a reference for each opcode corresponding python function.
+# This map contains a reference for each opcode corresponding python function.
 
 from .constants import *
 
@@ -7,21 +7,28 @@ from .constants import *
 ##################################################
 
 def op_1_negate(this):
-    '''
+    """
     Push value -1 onto stack
-    '''
+    """
     this.push(-0x1)
+
 
 def op_reserved():
     raise NotImplementedError
 
-#Push data
+
+# Push data
 def op_pushdata1():
     raise NotImplementedError
+
+
 def op_pushdata2():
     raise NotImplementedError
+
+
 def op_pushdata4():
     raise NotImplementedError
+
 
 #################################################
 # Push small numbers onto stack.
@@ -30,53 +37,70 @@ def op_pushdata4():
 def op_push_0(this):
     this.push(0x0)
 
+
 def op_push_1(this):
     this.push(0x1)
+
 
 def op_push_2(this):
     this.push(0x2)
 
+
 def op_push_3(this):
     this.push(0x3)
+
 
 def op_push_4(this):
     this.push(0x4)
 
+
 def op_push_5(this):
     this.push(0x5)
+
 
 def op_push_6(this):
     this.push(0x6)
 
+
 def op_push_7(this):
     this.push(0x7)
+
 
 def op_push_8(this):
     this.push(0x8)
 
+
 def op_push_9(this):
     this.push(0x9)
+
 
 def op_push_10(this):
     this.push(0xa)
 
+
 def op_push_11(this):
     this.push(0xb)
+
 
 def op_push_12(this):
     this.push(0xc)
 
+
 def op_push_13(this):
     this.push(0xd)
+
 
 def op_push_14(this):
     this.push(0xe)
 
+
 def op_push_15(this):
     this.push(0xf)
 
+
 def op_push_16(this):
     this.push(0x10)
+
 
 #################################################
 # Conditional Flow Control
@@ -85,8 +109,10 @@ def op_push_16(this):
 def op_nop(this):
     pass
 
+
 def op_ver(this):
     this.halt()
+
 
 def op_if(this):
     #Execute statements following if top os stack is not 0
@@ -102,7 +128,7 @@ def op_if(this):
                 return
         if this.code[this.instruction_pointer] is OP_ELSE:
             while this.code[this.instruction_pointer] is not OP_ENDIF:
-                    this.instruction_pointer += 1
+                this.instruction_pointer += 1
     else:
         while this.code[this.instruction_pointer] is not OP_ENDIF:
             if this.code[this.instruction_pointer] is OP_ELSE:
@@ -111,8 +137,9 @@ def op_if(this):
             else:
                 this.instruction_pointer += 1
 
+
 def op_notif(this):
-    #Execute statements following if top os stack is 0
+    # Execute statements following if top os stack is 0
 
     if this.pop() is 0:
         while this.code[this.instruction_pointer] is not OP_ENDIF:
@@ -126,16 +153,20 @@ def op_notif(this):
             else:
                 this.instruction_pointer += 1
 
+
 def op_verif(this):
     this.halt()
 
+
 def op_vernotif(this):
     this.halt()
+
 
 def op_else(this):
     while this.code[this.instruction_pointer] is not OP_ENDIF:
         if this.run_single_statement() is False:
             return False
+
 
 def op_endif(this):
     """
@@ -143,12 +174,15 @@ def op_endif(this):
     """
     pass
 
+
 def op_verify(this):
     if this.pop() is 0:
         this.halt()
 
+
 def op_return(this):
     this.halt()
+
 
 #################################################
 # Stack Operations
@@ -156,73 +190,93 @@ def op_return(this):
 
 def op_toaltstack(this):
     this.alternative_stack.push(this.pop())
+
+
 def op_fromaltstack(this):
     this.push(this.alternative_stack.pop())
+
+
 def op_2drop(this):
     this.pop()
     this.pop()
+
+
 def op_2dup(this):
-    a,b = this.data_stack[-2], this.data_stack[-1]
+    a, b = this.data_stack[-2], this.data_stack[-1]
     this.push(a)
     this.push(b)
 
+
 def op3dup(this):
-    a,b,c = this.data_stack[-1], this.data_stack[-2], this.data_stack[-3]
+    a, b, c = this.data_stack[-1], this.data_stack[-2], this.data_stack[-3]
     this.push(c)
     this.push(b)
     this.push(a)
 
+
 def op_2over(this):
-    a,b = this.data_stack[-3], this.data_stack[-4]
+    a, b = this.data_stack[-3], this.data_stack[-4]
     this.push(b)
     this.push(a)
+
 
 def op_2rot(this):
-    a,b = this.data_stack[-6], this.data_stack[-5]
-    del this.data_stack[0] #it feels unnecessary to do this twice
-    del this.data_stack[0] #but the deque wont allow me to delete with slices
+    a, b = this.data_stack[-6], this.data_stack[-5]
+    del this.data_stack[0]  # it feels unnecessary to do this twice
+    del this.data_stack[0]  # but the deque wont allow me to delete with slices
     this.push(a)
     this.push(b)
 
+
 def op_2swap(this):
-    a,b = this.pop(), this.pop()
-    c,d = this.pop(), this.pop()
+    a, b = this.pop(), this.pop()
+    c, d = this.pop(), this.pop()
     this.push(b)
     this.push(a)
     this.push(d)
     this.push(c)
 
+
 def op_ifdup(this):
     if this.peek() is not 0:
         this.push(this.peek())
 
+
 def op_depth(this):
     this.push(len(this.data_stack))
+
 
 def op_drop(this):
     this.pop()
 
+
 def op_dup(this):
     this.push(this.peek())
+
 
 def op_nip(this):
     del this.data_stack[-2]
 
+
 def op_over(this):
     this.push(this.data_stack[-2])
 
+
 def op_pick(this):
     this.push(this.data_stack[this.pop()])
+
 
 def op_roll(this):
     a = this.pop()
     this.push(this.data_stack[a])
     del this.data_stack[a]
 
+
 def op_rot(this):
     a = this.data_stack[-3]
     del this.data_stack[-3]
     this.push(a)
+
 
 def op_swap(this):
     """
@@ -233,12 +287,14 @@ def op_swap(this):
     del this.data_stack[-2]
     this.push(a)
 
+
 def op_tuck(this):
     a = this.pop()
     b = this.pop()
     this.push(a)
     this.push(b)
     this.push(a)
+
 
 #################################################
 # String Splice Operations
@@ -277,15 +333,18 @@ def op_reserved2(this):
 def op_1add(this):
     this.push(this.pop() + 1)
 
+
 def op_1sub(this):
     this.push(this.pop() - 1)
 
 def op_negate(this):
     this.push(-1 * this.pop())
 
+
 def op_abs(this):
     if this.peek() < 1:
         this.push(-1 * this.pop())
+
 
 def op_not(this):
     a = this.pop()
@@ -294,18 +353,24 @@ def op_not(this):
     else:
         this.push(0)
 
+
 def op_0notequal(this):
     if this.pop() is 0:
         this.push(0)
     else:
         this.push(1)
 
+
 def op_add(this):
-    this.push(this.pop() + this.pop())
+    l = this.pop()
+    r = this.pop()
+    this.push(l + r)
+
 
 def op_sub(this):
     a = this.pop()
     this.push(this.pop() - a)
+
 
 def op_booland(this):
     a = this.pop()
@@ -315,11 +380,13 @@ def op_booland(this):
     else:
         this.push(0)
 
+
 def op_boolor(this):
     if this.pop() is not 0 or this.pop() is not 0:
         this.push(1)
     else:
         this.push(0)
+
 
 def op_numequal(this):
     a = this.pop()
@@ -329,15 +396,18 @@ def op_numequal(this):
     else:
         this.push(0)
 
+
 def op_numequalverify(this):
     op_numequal(this)
     op_verify(this)
+
 
 def op_numnotequal(this):
     if this.pop() is not this.pop():
         this.push(1)
     else:
         this.push(0)
+
 
 def op_lessthan(this):
     """
@@ -348,6 +418,7 @@ def op_lessthan(this):
     else:
         this.push(0)
 
+
 def op_greaterthan(this):
     """
     Stack operations make this flipped!
@@ -356,6 +427,7 @@ def op_greaterthan(this):
         this.push(1)
     else:
         this.push(0)
+
 
 def op_lessthanorequal(this):
     """
@@ -366,6 +438,7 @@ def op_lessthanorequal(this):
     else:
         this.push(0)
 
+
 def op_greaterthanorequal(this):
     """
     Stack operations make this flipped!
@@ -375,20 +448,24 @@ def op_greaterthanorequal(this):
     else:
         this.push(0)
 
+
 def op_min(this):
     this.push(min(this.pop(),this.pop()))
 
+
 def op_max(this):
     this.push(max(this.pop(),this.pop()))
+
 
 def op_within(this):
     c = this.pop()
     b = this.pop()
     a = this.pop()
-    if a <=  c < b:
+    if a <= c < b:
         this.push(1)
     else:
         this.push(0)
+
 
 dispatch_map = {
     OP_FALSE : op_push_0,
@@ -483,11 +560,16 @@ dispatch_map = {
     OP_SWAP  : op_swap,
     OP_TUCK  : op_tuck,
 
+
+    # Cryptographic Operations
+    # OP_RIPEMD160 : op_ripemd160,
+    # OP_SHA1 : op_sha1,
+    # OP_SHA256 : op_sha256,
+    # OP_HASH160 : op_hash160,
+    # OP_HASH256 : op_hash256,
+    # OP_CODESEPARATOR : op_codeseparator,
+    # OP_CHECKSIG : op_checksig,
+    # OP_CHECKSIGVERIFY : op_checksigverify,
+    # OP_CHECKMULTISIG : op_checkmultisig,
+    # OP_CHECKMULTISIGVERIFY : op_checkmultisigverify,
 }
-
-
-
-
-
-
-

@@ -928,5 +928,6 @@ class TestScriptMachine(unittest.TestCase):
         self.assertEqual(0, len(self.script_machine.data_stack))
         self.assertTrue(self.script_machine.execution_successful)
 
+
 if __name__ == '__main__':
     unittest.main()
