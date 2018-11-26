@@ -20,6 +20,7 @@
 
 import os, binascii, hashlib, base58, ecdsa
 
+
 ##############################################################
 # Functions
 ##############################################################
@@ -29,20 +30,22 @@ def ripemd160(x):
     d.update(x)
     return d
 
+
 def generate_keypair():
     # generate private key , uncompressed WIF starts with "5" (that is 0x80)
     priv_key = os.urandom(32)
     fullkey = '80' + binascii.hexlify(priv_key).decode()
     sha256a = hashlib.sha256(binascii.unhexlify(fullkey)).hexdigest()
     sha256b = hashlib.sha256(binascii.unhexlify(sha256a)).hexdigest()
-    WIF = base58.b58encode(binascii.unhexlify(fullkey+sha256b[:8]))
+    WIF = base58.b58encode(binascii.unhexlify(fullkey + sha256b[:8]))
 
     # Generate public key, The uncompressed address starts with "1"
     sk = ecdsa.SigningKey.from_string(priv_key, curve=ecdsa.SECP256k1)
     vk = sk.get_verifying_key()
     pub_key = '04' + binascii.hexlify(vk.to_string()).decode()
 
-    return WIF,pub_key
+    return WIF, pub_key
+
 
 def generate_public_address(pub_key):
     '''
@@ -55,15 +58,14 @@ def generate_public_address(pub_key):
 
     return publ_addr_b
 
+
 ##############################################################
 # Driver code to test this file
 ##############################################################
 
 
 if __name__ == '__main__':
-
-
-    pri,pub  = generate_keypair()
+    pri, pub = generate_keypair()
     public_address = generate_public_address(pub)
 
     print("Private Key     : " + pri.decode())
