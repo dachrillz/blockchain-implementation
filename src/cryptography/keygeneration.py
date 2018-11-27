@@ -71,5 +71,3 @@ if __name__ == '__main__':
     print("Private Key     : " + pri.decode())
     print("Public Key     ,: " + pub)
     print("Bitcoin Address,: " + public_address.decode())
-
-    print("Good Luck!!!")

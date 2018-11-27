@@ -5,6 +5,7 @@
 from . import dispatch_map
 from collections import deque
 
+
 class Stack(deque):
     push = deque.append
 
@@ -13,6 +14,7 @@ class Stack(deque):
         if len(self) is 0:
             return 1
         return self[-1]
+
 
 class ScriptMachine:
     def __init__(self, code=None):
@@ -52,15 +54,15 @@ class ScriptMachine:
         self.halted = True
 
     def run_single_statement(self):
-            opcode = self.code[self.instruction_pointer]
-            self.instruction_pointer += 1
-            self.dispatch(opcode)
+        opcode = self.code[self.instruction_pointer]
+        self.instruction_pointer += 1
+        self.dispatch(opcode)
 
-            if self.halted:
-                return False
+        if self.halted:
+            return False
 
     def run(self):
-        #reset
+        # reset
         self.execution_successful = False
         self.halted = False
 
@@ -74,10 +76,8 @@ class ScriptMachine:
             if self.peek() is not 0:
                 self.execution_successful = True
 
-
     def dispatch(self, op):
         if op in self.dispatch_map:
-            self.dispatch_map[op](self) #python has higher order functions, meaning that we can evaluate them here.
+            self.dispatch_map[op](self)  # python has higher order functions, meaning that we can evaluate them here.
         else:
             raise RuntimeError("The opcode: " + str(op) + " is not implemented!")
-

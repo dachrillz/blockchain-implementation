@@ -83,7 +83,7 @@ _71 = 0x47  # Push 71 bytes onto stack
 _72 = 0x48  # Push 72 bytes onto stack
 _73 = 0x49  # Push 73 bytes onto stack
 _74 = 0x4a  # Push 74 bytes onto stack
-_75 = 0x4b  # Push 75 bytes onto stack
+OP_DATA = 0x4b # REPLACED BY ME!
 
 OP_PUSHDATA1 = 0x4c  # Push the next script byte containts N, push the following N bytes onto the stack
 OP_PUSHDATA2 = 0x4d  # The next to script bytes contain N, push the following N bytes onto the stack

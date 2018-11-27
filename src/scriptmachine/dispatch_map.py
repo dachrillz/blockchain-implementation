@@ -1,6 +1,8 @@
 # This map contains a reference for each opcode corresponding python function.
 
 from .constants import *
+from .cryptography import *
+
 
 #################################################
 # Stack Operations
@@ -115,8 +117,8 @@ def op_ver(this):
 
 
 def op_if(this):
-    #Execute statements following if top os stack is not 0
-    #Should probably be rewritten...
+    # Execute statements following if top os stack is not 0
+    # Should probably be rewritten...
     if this.pop() is not 0:
         while this.code[this.instruction_pointer] is not OP_ENDIF:
             if this.code[this.instruction_pointer] is OP_ELSE:
@@ -306,8 +308,9 @@ def op_size(this):
     """
     raise NotImplementedError
 
+
 #################################################
-#Binary Arithmetic and Conidtional
+# Binary Arithmetic and Conidtional
 ##################################################
 
 def op_equal(this):
@@ -316,15 +319,19 @@ def op_equal(this):
     else:
         this.push(0)
 
+
 def op_equalverify(this):
     op_equal(this)
     op_verify(this)
 
+
 def op_reserved1(this):
     this.halt()
 
+
 def op_reserved2(this):
     this.halt()
+
 
 #################################################
 # Arithmetic operations
@@ -336,6 +343,7 @@ def op_1add(this):
 
 def op_1sub(this):
     this.push(this.pop() - 1)
+
 
 def op_negate(this):
     this.push(-1 * this.pop())
@@ -450,11 +458,11 @@ def op_greaterthanorequal(this):
 
 
 def op_min(this):
-    this.push(min(this.pop(),this.pop()))
+    this.push(min(this.pop(), this.pop()))
 
 
 def op_max(this):
-    this.push(max(this.pop(),this.pop()))
+    this.push(max(this.pop(), this.pop()))
 
 
 def op_within(this):
@@ -467,109 +475,118 @@ def op_within(this):
         this.push(0)
 
 
+def op_data(this):
+    data = this.code[this.instruction_pointer]
+
+    this.instruction_pointer += 1
+    this.push(data)
+
+
 dispatch_map = {
-    OP_FALSE : op_push_0,
-    OP_TRUE  : op_push_1,
-    OP_1NEGATE : op_1_negate,
-    OP_RESERVED : op_reserved,
+    OP_FALSE: op_push_0,
+    OP_TRUE: op_push_1,
+    OP_1NEGATE: op_1_negate,
+    OP_RESERVED: op_reserved,
 
-    #Push data
-    OP_PUSHDATA1 : op_pushdata1,
-    OP_PUSHDATA2 : op_pushdata2,
-    OP_PUSHDATA4 : op_pushdata4,
+    # Push data
+    OP_PUSHDATA1: op_pushdata1,
+    OP_PUSHDATA2: op_pushdata2,
+    OP_PUSHDATA4: op_pushdata4,
 
-    #push small numbers onto stack
-    OP_0 : op_push_0,
-    OP_1 : op_push_1,
-    OP_2 : op_push_2,
-    OP_3 : op_push_3,
-    OP_4 : op_push_4,
-    OP_5 : op_push_5,
-    OP_6 : op_push_6,
-    OP_7 : op_push_7,
-    OP_8 : op_push_8,
-    OP_9 : op_push_9,
-    OP_10 : op_push_10,
-    OP_11 : op_push_11,
-    OP_12 : op_push_12,
-    OP_13 : op_push_13,
-    OP_14 : op_push_14,
-    OP_15 :  op_push_15,
-    OP_16 :  op_push_16,
+    # push small numbers onto stack
+    OP_0: op_push_0,
+    OP_1: op_push_1,
+    OP_2: op_push_2,
+    OP_3: op_push_3,
+    OP_4: op_push_4,
+    OP_5: op_push_5,
+    OP_6: op_push_6,
+    OP_7: op_push_7,
+    OP_8: op_push_8,
+    OP_9: op_push_9,
+    OP_10: op_push_10,
+    OP_11: op_push_11,
+    OP_12: op_push_12,
+    OP_13: op_push_13,
+    OP_14: op_push_14,
+    OP_15: op_push_15,
+    OP_16: op_push_16,
 
-    #String Operations
-    OP_SIZE : op_size,
+    # String Operations
+    OP_SIZE: op_size,
 
-    #Binary Arithmetic and Conidtional
-    OP_EQUAL        : op_equal,
-    OP_EQUALVERIFY  : op_equalverify,
-    OP_RESERVED1    : op_reserved1,
-    OP_RESERVED2    : op_reserved2,
+    # Binary Arithmetic and Conditional
+    OP_EQUAL: op_equal,
+    OP_EQUALVERIFY: op_equalverify,
+    OP_RESERVED1: op_reserved1,
+    OP_RESERVED2: op_reserved2,
 
-    #arithmetic operations
-    OP_1ADD             : op_1add,
-    OP_1SUB             : op_1sub,
-    OP_NEGATE           : op_negate,
-    OP_ABS              : op_abs,
-    OP_NOT              : op_not,
-    OP_0NOTEQUAL        : op_0notequal,
-    OP_ADD              : op_add,
-    OP_SUB              : op_sub,
-    OP_BOOLAND          : op_booland,
-    OP_BOOLOR           : op_boolor,
-    OP_NUMEQUAL         : op_numequal,
-    OP_NUMEQUALVERIFY   : op_numequalverify,
-    OP_NUMNOTEQUAL      : op_numnotequal,
-    OP_LESSTHAN         : op_lessthan,
-    OP_GREATERTHAN      : op_greaterthan,
-    OP_LESSTHANOREQUAL  : op_lessthanorequal,
-    OP_GREATERTHANOREQUAL : op_greaterthanorequal,
-    OP_MIN              : op_min,
-    OP_MAX              : op_max,
-    OP_WITHIN           : op_within,
+    # arithmetic operations
+    OP_1ADD: op_1add,
+    OP_1SUB: op_1sub,
+    OP_NEGATE: op_negate,
+    OP_ABS: op_abs,
+    OP_NOT: op_not,
+    OP_0NOTEQUAL: op_0notequal,
+    OP_ADD: op_add,
+    OP_SUB: op_sub,
+    OP_BOOLAND: op_booland,
+    OP_BOOLOR: op_boolor,
+    OP_NUMEQUAL: op_numequal,
+    OP_NUMEQUALVERIFY: op_numequalverify,
+    OP_NUMNOTEQUAL: op_numnotequal,
+    OP_LESSTHAN: op_lessthan,
+    OP_GREATERTHAN: op_greaterthan,
+    OP_LESSTHANOREQUAL: op_lessthanorequal,
+    OP_GREATERTHANOREQUAL: op_greaterthanorequal,
+    OP_MIN: op_min,
+    OP_MAX: op_max,
+    OP_WITHIN: op_within,
 
-    OP_NOP              : op_nop,
-    OP_VER              : op_ver,
-    OP_IF               : op_if,
-    OP_NOTIF            : op_notif,
-    OP_VERIF            : op_verif,
-    OP_VERNOTIF         : op_vernotif,
-    OP_ELSE             : op_else,
-    OP_ENDIF            : op_endif,
-    OP_VERIFY           : op_verify,
-    OP_RETURN           : op_return,
+    OP_NOP: op_nop,
+    OP_VER: op_ver,
+    OP_IF: op_if,
+    OP_NOTIF: op_notif,
+    OP_VERIF: op_verif,
+    OP_VERNOTIF: op_vernotif,
+    OP_ELSE: op_else,
+    OP_ENDIF: op_endif,
+    OP_VERIFY: op_verify,
+    OP_RETURN: op_return,
 
-    #Stack operations
-    OP_TOALTSTACK : op_toaltstack,
-    OP_FROMALTSTACK : op_fromaltstack,
-    OP_2DROP : op_2drop,
-    OP_2DUP  : op_2dup,
-    OP_3DUP  : op3dup,
-    OP_2OVER : op_2over,
-    OP_2ROT  : op_2rot,
-    OP_2SWAP : op_2swap,
-    OP_IFDUP : op_ifdup,
-    OP_DEPTH : op_depth,
-    OP_DROP  : op_drop,
-    OP_DUP   : op_dup,
-    OP_NIP   : op_nip,
-    OP_OVER  : op_over,
-    OP_PICK  : op_pick,
-    OP_ROLL  : op_roll,
-    OP_ROT   : op_rot,
-    OP_SWAP  : op_swap,
-    OP_TUCK  : op_tuck,
-
+    # Stack operations
+    OP_TOALTSTACK: op_toaltstack,
+    OP_FROMALTSTACK: op_fromaltstack,
+    OP_2DROP: op_2drop,
+    OP_2DUP: op_2dup,
+    OP_3DUP: op3dup,
+    OP_2OVER: op_2over,
+    OP_2ROT: op_2rot,
+    OP_2SWAP: op_2swap,
+    OP_IFDUP: op_ifdup,
+    OP_DEPTH: op_depth,
+    OP_DROP: op_drop,
+    OP_DUP: op_dup,
+    OP_NIP: op_nip,
+    OP_OVER: op_over,
+    OP_PICK: op_pick,
+    OP_ROLL: op_roll,
+    OP_ROT: op_rot,
+    OP_SWAP: op_swap,
+    OP_TUCK: op_tuck,
 
     # Cryptographic Operations
-    # OP_RIPEMD160 : op_ripemd160,
-    # OP_SHA1 : op_sha1,
-    # OP_SHA256 : op_sha256,
-    # OP_HASH160 : op_hash160,
-    # OP_HASH256 : op_hash256,
-    # OP_CODESEPARATOR : op_codeseparator,
-    # OP_CHECKSIG : op_checksig,
-    # OP_CHECKSIGVERIFY : op_checksigverify,
-    # OP_CHECKMULTISIG : op_checkmultisig,
-    # OP_CHECKMULTISIGVERIFY : op_checkmultisigverify,
+    OP_RIPEMD160: op_ripemd160,
+    OP_SHA1: op_sha1,
+    OP_SHA256: op_sha256,
+    OP_HASH160: op_hash160,
+    OP_HASH256: lambda n: 1/0,
+    OP_CODESEPARATOR: lambda n: "not implemented",
+    OP_CHECKSIG: op_check_sig,
+    OP_CHECKSIGVERIFY: lambda n: "not implemented",
+    OP_CHECKMULTISIG: lambda n: "not implemented",
+    OP_CHECKMULTISIGVERIFY: lambda n: "not implemented",
+
+    OP_DATA: op_data,
+    # My own operations, since all this is written using python we can separate data from operations easily
 }
