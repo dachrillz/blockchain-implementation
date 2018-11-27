@@ -1,6 +1,7 @@
+from src.cryptography.signature import create_signature
 from src.scriptmachine.constants import *
-from src.scriptmachine.cryptography import get_hash_160_from_str, get_sha_256_from_str
 
+from src.cryptography.cryptography import get_hash_160_from_str, get_sha_256_from_str
 
 class Transaction:
     """
@@ -30,10 +31,6 @@ class Output:
         self.scriptPubKey = script_pub_key
 
 
-def verify_script(output_transaction, input_transaction):
-    pass
-
-
 def create_locking_script(public_key):
     hashed_public_key_as_str = get_hash_160_from_str(public_key)
 
@@ -56,7 +53,7 @@ def hash_locking_script(script):
     Note here, in the real bitcoin transacitons are serialized.
     Here I simply take the script in its' Python form and hash the string of that.
 
-    @TODO: Do we need to sign the whole transaction or just the script?
+    @TODO: Change this to the whole transaction later !
     """
 
     serialized = ''.join(str(x) for x in script)
@@ -67,8 +64,10 @@ def hash_locking_script(script):
     return res
 
 
-def sign_locking_script(private_key, script):
-
+def sign_hashed_locking_script(private_key, hashed_locking_script):
+    # @TODO: Change this to the whole transaction later !
+    signature = create_signature(private_key, hashed_locking_script)
+    return signature
 
 
 def create_unlocking_script(signature_of_locking_script, public_key):

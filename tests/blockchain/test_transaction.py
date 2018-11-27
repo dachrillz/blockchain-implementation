@@ -25,29 +25,33 @@ class TestTransaction(TestCase):
     def test_verify(self):
         pass
 
-    def test_hash_transaction(self):
-        script = create_locking_script(self.public_key)
-
-        hash_locking_script(script)
-
-        self.assertTrue(True)
 
     def test_unlocking_script_fails(self):
-        the_script = create_unlocking_script("hej", self.public_key)
+        locking_script = create_locking_script(self.public_key_2) # Note! Other public key here!
+
+        hashed_locking_script = hash_locking_script(locking_script)
+
+        signature = sign_hashed_locking_script(self.private_key, hashed_locking_script)
+
+        the_script = create_unlocking_script(signature, self.public_key)
 
         script_machine = ScriptMachine()
 
         script_machine.set_code(the_script)
 
         script_machine.run()
-
-        print("did the verification succeed?")
-        print(script_machine.execution_successful)
 
         self.assertFalse(script_machine.execution_successful)
 
     def test_unlocking_script_succeeds(self):
-        the_script = create_unlocking_script("hej", self.public_key)
+
+        locking_script = create_locking_script(self.public_key)
+
+        hashed_locking_script = hash_locking_script(locking_script)
+
+        signature = sign_hashed_locking_script(self.private_key, hashed_locking_script)
+
+        the_script = create_unlocking_script(signature, self.public_key)
 
         script_machine = ScriptMachine()
 
@@ -55,35 +59,6 @@ class TestTransaction(TestCase):
 
         script_machine.run()
 
-        print("did the verification succeed?")
-        print(script_machine.execution_successful)
-
         self.assertTrue(script_machine.execution_successful)
 
 
-class Transaction:
-    """
-    A Bitcoin transaction
-    """
-
-    def __init__(self, list_of_inputs, list_of_outputs):
-        self.version = 1
-
-        self.list_of_inputs = list_of_inputs
-
-        self.list_of_outputs = list_of_outputs
-
-
-class Input:
-
-    def __init__(self, previous_tx, index, script_sig):
-        self.previous_tx = previous_tx
-        self.index = index
-        self.scriptSig = script_sig
-
-
-class Output:
-
-    def __init__(self, value, script_pub_key):
-        self.value = value
-        self.scriptPubKey = script_pub_key

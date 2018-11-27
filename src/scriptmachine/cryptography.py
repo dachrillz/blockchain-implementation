@@ -1,60 +1,7 @@
-import hashlib
-
-
-def get_sha_256_from_str(str_input):
-    m = hashlib.sha256()
-    m.update(str_input.encode('utf-8'))
-    return m.digest()
-
-
-def get_sha_256_from_bytes(byte_input):
-    m = hashlib.sha256()
-    m.update(byte_input)
-    return m.digest()
-
-
-def get_ripemd_160_from_str(str_input):
-    m = hashlib.ripemd160()
-    m.update(str_input.encode('utf-8'))
-    return m.digest()
-
-
-def get_ripemd_160_from_bytes(byte_input):
-    m = hashlib.ripemd160()
-    m.update(byte_input)
-    return m.digest()
-
-
-def get_sha_1_from_str(str_input):
-    m = hashlib.sha1()
-    m.update(str_input.encode('utf-8'))
-    return m.digest()
-
-
-def get_sha_1_from_bytes(byte_input):
-    m = hashlib.sha1()
-    m.update(byte_input)
-    return m.digest()
-
-
-def get_hash_160_from_str(str_input):
-    # Return RIPEMD160(SHA256(x)) hash
-    r = hashlib.new('ripemd160')
-
-    r.update(str_input.encode('utf-8'))
-    s = hashlib.sha256()
-    s.update(r.digest())
-    return s.digest()
-
-
-def get_hash_160_from_bytes(byte_input):
-    # Return RIPEMD160(SHA256(x)) hash
-    r = hashlib.new('ripemd160')
-    r.update(byte_input)
-    s = hashlib.sha256()
-    s.update(r.digest())
-    return s.digest()
-
+from src.cryptography import *
+from src.blockchain.transaction import create_locking_script, hash_locking_script
+from src.cryptography.cryptography import *
+from src.cryptography.signature import verify_signature_from_public_key
 
 
 def op_ripemd160(this):
@@ -78,10 +25,22 @@ def op_hash160(this):
     this.push(temp)
 
 def op_check_sig(this):
-    first = this.pop()
-    second = this.pop()
+    pub_key = this.pop()
+    trans_signature = this.pop()
 
-    if first == second:
+    print(pub_key)
+
+    print(trans_signature)
+
+
+    reconstructed_message = create_locking_script(pub_key)
+    reconstructed_message = hash_locking_script(reconstructed_message)
+
+    ver = verify_signature_from_public_key(trans_signature, pub_key, reconstructed_message)
+
+    print(ver)
+
+    if ver:
         this.push(1)
     else:
         this.push(0)

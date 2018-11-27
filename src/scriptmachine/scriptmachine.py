@@ -67,7 +67,6 @@ class ScriptMachine:
         self.halted = False
 
         while self.instruction_pointer < len(self.code):
-            print(self.data_stack)
             if self.halted:
                 break
             self.run_single_statement()
