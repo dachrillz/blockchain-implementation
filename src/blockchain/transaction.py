@@ -15,6 +15,9 @@ class Transaction:
 
         self.list_of_outputs = list_of_outputs
 
+    def as_string(self):
+        return "version: " + str(self.version) + " inputs: " + str(self.list_of_inputs) + " outputs: " + str(self.list_of_outputs)
+
 
 class Input:
 
