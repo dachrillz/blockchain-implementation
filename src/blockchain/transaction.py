@@ -7,11 +7,22 @@ _version = 1
 
 
 def create_complete_transaction(prev_tx, index, value, private_key, public_key):
+    '''
+    @TODO: Currently only handles single input/output change this later!
+
+    :param prev_tx: Reference
+    :param index:
+    :param value:
+    :param private_key:
+    :param public_key:
+    :return:
+    '''
     locking_script = create_locking_script(public_key)
     signature = sign_hashed_locking_script(private_key, hash_locking_script(locking_script))
 
-    _input = Input(prev_tx, index, signature)
-    _output = Output(value, public_key)
+    #@TODO: change these names to something better
+    _input = [Input(prev_tx, index, signature)]
+    _output = [Output(value, public_key)]
 
     return Transaction(_input, _output)
 
@@ -29,7 +40,7 @@ class Transaction:
         self.list_of_outputs = list_of_outputs
 
     def as_string(self):
-        return "version: " + str(self.version) + " inputs: " + str(self.list_of_inputs) + " outputs: " + str(
+        return "Transaction: version: " + str(self.version) + " inputs: " + str(self.list_of_inputs) + " outputs: " + str(
             self.list_of_outputs)
 
     def __hash__(self):

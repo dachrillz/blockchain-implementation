@@ -3,7 +3,7 @@ from src.cryptography.cryptography import get_sha_256_from_str, get_sha_256_from
 import os
 
 
-def hash_cash(difficulty, state):
+def hash_cash(state, difficulty):
     """
 
     :param difficulty: Number of leading zeroes required

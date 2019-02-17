@@ -2,10 +2,12 @@
 
 
 # @TODO: this one simply works locally for now but should connect to a network later to sync its state.
-from src.blockchain.block import Block
 from src.blockchain.genesis_block import get_genesis
+from src.mining.blockminter import proof_of_work
 from collections import deque
-import datetime
+
+
+from src.interface.TerminalIO import TerminalIO
 
 if __name__ == "__main__":
     # Create genesis block
@@ -14,6 +16,9 @@ if __name__ == "__main__":
     block_chain = deque()
     block_chain.append(genesis_block)
 
+    #Set the interface
+    interface = TerminalIO()
+
     while True:
         # @TODO: change later, but for now simply create a chain of blocks
 
@@ -21,19 +26,36 @@ if __name__ == "__main__":
         latest_block = block_chain[-1]
 
         prev_hash = latest_block.get_hash()
-        version = 1  # @TODO: move to some config file
-        merkle_root = None  # @TODO: generalise
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # @TODO: make a module for this
+        difficulty = latest_block.difficulty_target
 
-        difficulty_target = 1.0  # @TODO: this has to be requested / calculated later
-        nonce = 1  # @TODO: how to calculate nonce?
+        #Get transactions from mempool
+        transactions = interface.create_transaction()
 
-        transactions = []  # @TODO: append collected transactions requests here!
-
-        new_block = Block(version, prev_hash, merkle_root, timestamp, difficulty_target, nonce, transactions)
+        solution, new_block = proof_of_work(prev_hash, difficulty, transactions)
 
         # @TODO: calculate integrity of blockchain here
         block_chain.append(new_block)
 
-        print(latest_block.as_string())
-        input()
+
+        #Calculate all outspent transactions and assign public addresses to them
+        #@TODO: break out this function!
+        available_outputs = {}
+        for block in block_chain:
+            for transaction in block.transactions:
+                for output in transaction.list_of_outputs:
+                    if output.scriptPubKey in available_outputs:
+                        available_outputs[output.scriptPubKey] += output.value
+                    else:
+                        available_outputs[output.scriptPubKey] = output.value
+
+        print()
+        print("The blockchain")
+        print("Blockchain length " + str(len(block_chain)))
+        for item in block_chain:
+            print(item.as_string())
+
+
+        print()
+        print("All available outputs!")
+        print(available_outputs)
+

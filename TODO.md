@@ -11,3 +11,5 @@
 3. Add ability for the client to check integrity of the blockchain
 4. Mining! That is make sure that blocks get written at a certain pace.
 5. Write tests for the miner
+6. Write test to verify PoW
+7. What to do with all time stamps?
