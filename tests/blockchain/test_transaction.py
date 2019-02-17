@@ -14,20 +14,26 @@ class TestTransaction(TestCase):
         self.public_key_2 = "04538998709970098768f77c151f402498bd1f58b7eb66e03d847810c18a8152b01590af445d06a47c7a506040fcd599f37978fe6d5e3ab2fdfdb6a86e88ea826e"
         self.bitcoin_address_2 = "15J9tU8oRTnGnettS6Y546iTEaTJ2eLKSo"
 
-    def test_construct_transaction(self):
-        pass
-
-        # Construct output
-        # pay_to_public_key_script(public_key)
-
-        # Construct input
-
     def test_verify(self):
         pass
 
+    def test_coinbase_transaction(self):
+        pass
+
+    def test_create_complete_transaction(self):
+        value = 10
+
+        output1 = [Output(value, self.public_key)]
+        cb = Transaction([], output1)
+
+        prev_tx = str(int.from_bytes(cb.__hash__(), byteorder='big'))
+
+        index = 0
+
+        trans = create_complete_transaction(prev_tx, index, value, self.private_key_2, self.public_key)
 
     def test_unlocking_script_fails(self):
-        locking_script = create_locking_script(self.public_key_2) # Note! Other public key here!
+        locking_script = create_locking_script(self.public_key_2)  # Note! Other public key here!
 
         hashed_locking_script = hash_locking_script(locking_script)
 
@@ -44,7 +50,6 @@ class TestTransaction(TestCase):
         self.assertFalse(script_machine.execution_successful)
 
     def test_unlocking_script_succeeds(self):
-
         locking_script = create_locking_script(self.public_key)
 
         hashed_locking_script = hash_locking_script(locking_script)
@@ -60,5 +65,3 @@ class TestTransaction(TestCase):
         script_machine.run()
 
         self.assertTrue(script_machine.execution_successful)
-
-

@@ -10,11 +10,11 @@ from ecdsa.keys import BadSignatureError
 
 def create_signature(secret_key, message):
     # SECP256k1 is the Bitcoin elliptic curve
+
     secret_key = base58.b58decode(secret_key)
 
     secret_key = secret_key[1:]  # Remove first byte for version
     secret_key = secret_key[:-4]  # Remove last 4 bytes for checksum
-
 
     signing_key = ecdsa.SigningKey.from_string(secret_key, curve=ecdsa.SECP256k1)
 
