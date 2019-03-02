@@ -1,7 +1,9 @@
 # This file contains the block chain class
 from collections import deque
 
+from src.blockchain.difficulty_calculator import calculate_difficulty
 from src.blockchain.genesis_block import get_genesis
+from src.mining.mining import proof_of_work_solved
 
 
 class BlockChain:
@@ -12,7 +14,7 @@ class BlockChain:
         genesis_block = get_genesis()
         self.block_chain.append(genesis_block)
 
-        self.reference_to_inputs = {}
+        self.reference_to_transactions = {}
         self.unspent_transactions = {}
 
     def get_last_block(self):
@@ -24,6 +26,8 @@ class BlockChain:
         k = 0
         for block in self.block_chain:
             if k is not 0:
+                if proof_of_work_solved(block):
+                    return False
                 if block.prev_hash != previous_hash:
                     return False
             else:
@@ -32,6 +36,10 @@ class BlockChain:
         return True
 
     def add_new_block(self, new_block):
+        # Add a reference to each transaction in dictionary so that they can be easily referenced.
+        for transaction in new_block.transactions:
+            self._add_reference_to_transactions(transaction.__hash__(), transaction)
+
         self.block_chain.append(new_block)
 
     def get_unspent_transactions(self):
@@ -49,4 +57,4 @@ class BlockChain:
         :return:
         '''
 
-        self.reference_to_inputs[tx] = transaction
+        self.reference_to_transactions[tx] = transaction

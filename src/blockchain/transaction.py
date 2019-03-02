@@ -1,7 +1,7 @@
 from src.cryptography.signature import create_signature
 from src.scriptmachine.constants import *
 
-from src.cryptography.cryptography import get_hash_160_from_str, get_sha_256_from_str, get_sha_256_from_bytes
+from src.cryptography.cryptography import get_hash_160_from_str, get_sha_256_from_bytes
 
 _version = 1
 
@@ -39,6 +39,7 @@ class Transaction:
 
         self.list_of_outputs = list_of_outputs
 
+
     def as_string(self):
         return "Transaction: version: " + str(self.version) + " inputs: " + str(self.list_of_inputs) + " outputs: " + str(
             self.list_of_outputs)
@@ -48,12 +49,12 @@ class Transaction:
         string_to_hash = str(self.version)
 
         for item in self.list_of_inputs:
-            string_to_hash += item.txid + item.index + item.scriptSig
+            string_to_hash += str(item.txid) + str(item.index) + str(item.scriptSig)
 
         for item in self.list_of_outputs:
             string_to_hash += str(item.value) + str(item.scriptPubKey)
 
-        return get_sha_256_from_bytes(get_sha_256_from_bytes(string_to_hash.encode()))
+        return int.from_bytes(get_sha_256_from_bytes(get_sha_256_from_bytes(string_to_hash.encode())), byteorder='big')
 
 
 class Input:
@@ -68,6 +69,8 @@ class Input:
         self.index = index
         self.scriptSig = script_sig
 
+    def __repr__(self):
+        return "txid: " + str(self.txid) + " ind: " + str(self.index) + " sig: " + str(self.scriptSig)
 
 class Output:
 
@@ -78,6 +81,9 @@ class Output:
         """
         self.value = value
         self.scriptPubKey = script_pub_key
+
+    def __repr__(self):
+        return "value: " + str(self.value) + " key: " + str(self.scriptPubKey)
 
 
 def create_locking_script(public_key):
@@ -114,7 +120,7 @@ def hash_locking_script(script):
 def sign_hashed_locking_script(private_key, hashed_locking_script):
     # @TODO: Change this to the whole transaction later !
     signature = create_signature(private_key, hashed_locking_script)
-    return signature
+    return str(int.from_bytes(signature, byteorder='big'))
 
 
 def create_unlocking_script(signature_of_locking_script, public_key):

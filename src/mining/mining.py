@@ -1,41 +1,25 @@
 # This file contains the hash cash mining algorithm
-from src.cryptography.cryptography import get_sha_256_from_str, get_sha_256_from_bytes
 import os
 
 
-def hash_cash(state, difficulty):
+def hash_cash(block):
     """
 
-    :param difficulty: Number of leading zeroes required
-    :param state: A string representation of the state of the previous block
+    :param block: You know what kind of block this is
     :return: The string that solves the proof of work problem
     """
 
     guess = b'\0'
-    state = state.encode()
 
-    solution = get_sha_256_from_bytes(state + guess)
-
-    while not problem_solved(difficulty, solution):
-        solution = get_sha_256_from_bytes(state + guess)
+    while not proof_of_work_solved(block):
+        block.nonce = guess
         guess = os.urandom(32)
-
-    print("found solution")
-
-    check_solution(difficulty, solution, state)
+    return guess
 
 
-def problem_solved(difficulty, solution):
-    """
-    Check if the string solution solves the hash cash problem, as defined by difficulty
-    :param difficulty:
-    :param solution:
-    :return: true if solved
-    """
-    s = solution[:difficulty]
-    return s == len(s) * b'\0'
+def proof_of_work_solved(block):
+    solution = block.get_hash().encode()
+    difficulty = block.difficulty_target
+    return len(str(solution)) <= 78 - difficulty # Since I represent the hash with an integer, 78 is the length of a sha256 as integer.
 
 
-def check_solution(difficulty, solution, state):
-    print(difficulty)
-    print(get_sha_256_from_bytes(state + solution))

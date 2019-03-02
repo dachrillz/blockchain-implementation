@@ -6,7 +6,6 @@ from src.mining.blockminter import mint_block
 
 class TestBlockChain(TestCase):
 
-
     def test_validate_blockchain(self):
         bc = BlockChain()
 
