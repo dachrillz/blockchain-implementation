@@ -4,12 +4,13 @@
 [![codecov](https://codecov.io/gh/dachrillz/blockchain-implementation/branch/master/graph/badge.svg)](https://codecov.io/gh/dachrillz/blockchain-implementation)
 
 # Current goals
-1. I stopped at writing the blockchain itself.
+1. Verify unspent outputs!!!!!!!
 2. Next up should be ability to make request transactions to the blockchain. Thas is:
 1. write the I/O for the terminal in order to make transactions
 2. might require the coinbase to be implemented in the transactions
 3. add ability to add transactions to the blocks.
 4. don't forget to write tests!
+
 
 # Later goals
 3. Add ability for the client to check integrity of the blockchain

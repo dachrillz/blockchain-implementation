@@ -3,7 +3,7 @@ from src.scriptmachine.constants import *
 
 from src.cryptography.cryptography import get_hash_160_from_str, get_sha_256_from_bytes
 
-_version = 1
+_version = 1 # @TODO: move!
 
 
 def create_complete_transaction(prev_tx, index, value, private_key, public_key):
@@ -14,13 +14,12 @@ def create_complete_transaction(prev_tx, index, value, private_key, public_key):
     :param index:
     :param value:
     :param private_key:
-    :param public_key:
+    :param public_key: Key to pay to
     :return:
     '''
     locking_script = create_locking_script(public_key)
     signature = sign_hashed_locking_script(private_key, hash_locking_script(locking_script))
 
-    #@TODO: change these names to something better
     _input = [Input(prev_tx, index, signature)]
     _output = [Output(value, public_key)]
 

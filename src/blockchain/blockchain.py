@@ -26,7 +26,7 @@ class BlockChain:
         k = 0
         for block in self.block_chain:
             if k is not 0:
-                if proof_of_work_solved(block):
+                if not proof_of_work_solved(block):
                     return False
                 if block.prev_hash != previous_hash:
                     return False
