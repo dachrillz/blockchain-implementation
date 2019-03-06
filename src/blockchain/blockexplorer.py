@@ -1,9 +1,27 @@
 # This file contains everything related to retrieving information from the blockchain
 
 
+def retrieve_all_unspent_transactions(block_chain):
+    # @TODO: you should really write more tests for this function as it could be buggy as hell...
+    available_outputs = {}
+    for block in block_chain.block_chain:
+        for transaction in block.transactions:
+            _value = 0
+            for _output in transaction.list_of_outputs:
+                _value += _output.value
+
+            for _input in transaction.list_of_inputs:
+                # @TODO: handle key error here!
+                del available_outputs[_input.txid]
+
+            available_outputs[transaction.__hash__()] = _value
+    return available_outputs
+
+"""
 def retrieve_all_unspent_transactons(block_chain):
     # Calculate all outspent transactions and assign public addresses to them
     available_outputs = {}
+    spent_outputs = set()
     for block in block_chain.block_chain:
         for transaction in block.transactions:
             for output in transaction.list_of_outputs:
@@ -11,7 +29,9 @@ def retrieve_all_unspent_transactons(block_chain):
                     available_outputs[output.scriptPubKey] += output.value
                 else:
                     available_outputs[output.scriptPubKey] = output.value
-    return available_outputs
+"""
+
+
 
 
 def pretty_print_blockchain(blockchain):

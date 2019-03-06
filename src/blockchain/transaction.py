@@ -1,27 +1,40 @@
+from os import urandom
+
+from src.cryptography.keygeneration import recreate_public_key
 from src.cryptography.signature import create_signature
 from src.scriptmachine.constants import *
 
 from src.cryptography.cryptography import get_hash_160_from_str, get_sha_256_from_bytes
 
-_version = 1 # @TODO: move!
+_version = 1  # @TODO: move!
 
 
-def create_complete_transaction(prev_tx, index, value, private_key, public_key):
-    '''
-    @TODO: Currently only handles single input/output change this later!
+def create_complete_transaction(list_of_tuple_of_inputs, list_of_tuple_of_outputs):
+    # [(prev_tx, private_key)], [(value, public_key)]
+    """
 
-    :param prev_tx: Reference
-    :param index:
-    :param value:
-    :param private_key:
-    :param public_key: Key to pay to
+    :param list_of_tuple_of_inputs:
+            prev_tx - previous transaction hash
+            index - which output is referenced
+            private_key - private key to unlock the output
+    :param list_of_tuple_of_outputs:
+            value - the amount that is to be transacted
+            public_key - to what key is the value transacted
     :return:
-    '''
-    locking_script = create_locking_script(public_key)
-    signature = sign_hashed_locking_script(private_key, hash_locking_script(locking_script))
+    """
 
-    _input = [Input(prev_tx, index, signature)]
-    _output = [Output(value, public_key)]
+    _input = []
+    for prev_tx, _index, _private_key in list_of_tuple_of_inputs:
+        # Recreate the signature, with help of private key
+        print(_private_key)
+        _public_key = recreate_public_key(_private_key)
+        _locking_script = create_locking_script(_public_key)
+        _signature = sign_hashed_locking_script(_private_key, hash_locking_script(_locking_script))
+        _input.append(Input(prev_tx, _index, _signature))
+
+    _output = []
+    for value, public_key in list_of_tuple_of_outputs:
+        _output.append(Output(value, public_key))
 
     return Transaction(_input, _output)
 
@@ -32,12 +45,12 @@ class Transaction:
     """
 
     def __init__(self, list_of_inputs, list_of_outputs):
+        self.nonce = urandom(32)  # Added since Coinbase transactions are normal transactions, this reduces risk of hash collision.
         self.version = _version
 
         self.list_of_inputs = list_of_inputs
 
         self.list_of_outputs = list_of_outputs
-
 
     def as_string(self):
         return "Transaction: version: " + str(self.version) + " inputs: " + str(self.list_of_inputs) + " outputs: " + str(
@@ -45,7 +58,7 @@ class Transaction:
 
     def __hash__(self):
 
-        string_to_hash = str(self.version)
+        string_to_hash = str(self.version) + str(int.from_bytes(self.nonce, byteorder='big'))
 
         for item in self.list_of_inputs:
             string_to_hash += str(item.txid) + str(item.index) + str(item.scriptSig)
@@ -70,6 +83,7 @@ class Input:
 
     def __repr__(self):
         return "txid: " + str(self.txid) + " ind: " + str(self.index) + " sig: " + str(self.scriptSig)
+
 
 class Output:
 
