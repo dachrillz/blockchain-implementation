@@ -21,16 +21,20 @@ class TestTransaction(TestCase):
         pass
 
     def test_create_complete_transaction(self):
+        #@TODO: write an assert for this
         value = 10
 
         output1 = [Output(value, self.public_key)]
         cb = Transaction([], output1)
 
-        prev_tx = str(int.from_bytes(cb.__hash__(), byteorder='big'))
+        prev_tx = cb.__hash__()
 
         index = 0
 
-        trans = create_complete_transaction(prev_tx, index, value, self.private_key_2, self.public_key)
+        _input = [(prev_tx, index, self.private_key_2)]
+        _output = [(value, self.public_key)]
+
+        trans = create_complete_transaction(_input, _output)
 
     def test_unlocking_script_fails(self):
         locking_script = create_locking_script(self.public_key_2)  # Note! Other public key here!

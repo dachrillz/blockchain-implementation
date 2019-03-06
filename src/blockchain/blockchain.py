@@ -1,7 +1,6 @@
 # This file contains the block chain class
 from collections import deque
 
-from src.blockchain.difficulty_calculator import calculate_difficulty
 from src.blockchain.genesis_block import get_genesis
 from src.mining.mining import proof_of_work_solved
 

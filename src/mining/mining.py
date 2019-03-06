@@ -5,7 +5,7 @@ import os
 def hash_cash(block):
     """
 
-    :param block: You know what kind of block this is
+    :param block: You know what kind of block this is!
     :return: The string that solves the proof of work problem
     """
 

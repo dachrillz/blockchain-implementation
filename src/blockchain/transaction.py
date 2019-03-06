@@ -26,7 +26,6 @@ def create_complete_transaction(list_of_tuple_of_inputs, list_of_tuple_of_output
     _input = []
     for prev_tx, _index, _private_key in list_of_tuple_of_inputs:
         # Recreate the signature, with help of private key
-        print(_private_key)
         _public_key = recreate_public_key(_private_key)
         _locking_script = create_locking_script(_public_key)
         _signature = sign_hashed_locking_script(_private_key, hash_locking_script(_locking_script))

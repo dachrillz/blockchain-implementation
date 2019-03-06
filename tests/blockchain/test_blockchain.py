@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from src.blockchain.blockchain import BlockChain
-from src.mining.blockminter import mint_block
+from src.mining.blockminter import proof_of_work
 
 
 class TestBlockChain(TestCase):
@@ -11,9 +11,8 @@ class TestBlockChain(TestCase):
 
         genesis_block = bc.get_last_block()
 
-        block1 = mint_block(genesis_block.get_hash(), [])
-
-        block2 = mint_block(block1.get_hash(), [])
+        block1 = proof_of_work(prev_hash=genesis_block.get_hash(), transactions=[],public_key="")
+        block2 = proof_of_work(prev_hash=block1.get_hash(), transactions=[],public_key="")
 
         bc.add_new_block(block1)
         bc.add_new_block(block2)
@@ -25,9 +24,8 @@ class TestBlockChain(TestCase):
 
         genesis_block = bc.get_last_block()
 
-        block1 = mint_block(genesis_block.get_hash(), [])
-
-        block2 = mint_block("I am an invalid hash", [])
+        block1 = proof_of_work(prev_hash=genesis_block.get_hash(), transactions=[],public_key="")
+        block2 = proof_of_work(prev_hash="invalid hash", transactions=[],public_key="")
 
         bc.add_new_block(block1)
         bc.add_new_block(block2)
