@@ -1,10 +1,8 @@
 # This is the main file used for running a full node/miner/client for the bitcoin prototype implementation
 
-
-# @TODO: this one simply works locally for now but should connect to a network later to sync its state.
 from src.blockchain.blockchain import BlockChain
 from src.blockchain.blockexplorer import pretty_print_blockchain, pretty_print_unspent_transactions, \
-    retrieve_all_unspent_transactions
+    retrieve_all_unspent_transactions_from_transaction_hash
 from src.blockchain.mempool import MemPool
 from src.blockchain.dummychain import get_dummy_chain
 from src.mining.blockminter import proof_of_work
@@ -62,7 +60,7 @@ def run_dummy():
     pretty_print_blockchain(bc)
 
     print("\nunspent transactions")
-    un = retrieve_all_unspent_transactions(bc)
+    un = retrieve_all_unspent_transactions_from_transaction_hash(bc)
 
     pretty_print_unspent_transactions(un)
 

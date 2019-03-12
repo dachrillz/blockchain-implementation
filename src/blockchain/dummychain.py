@@ -4,8 +4,11 @@
 from src.blockchain.blockchain import BlockChain
 from src.blockchain.block import Block
 from src.blockchain.transaction import create_complete_transaction
+from src.database.databaseinterface import TestDataBase
 
 from src.mining.blockminter import proof_of_work
+
+# @TODO: this transaction is not verified via the script machine yet!
 
 # Create blockchain
 block_chain = BlockChain()
@@ -25,7 +28,9 @@ block_chain.add_new_block(block1)
 prev_tx = block_chain.get_last_block().transactions[0].__hash__()
 index = 0
 value = 10
-_transactions =[create_complete_transaction(prev_tx, index, value, _private_key1, _public_key2)]
+_input = [(prev_tx, index, _private_key1)]
+_output = [(value,_public_key1)]
+_transactions =[create_complete_transaction(_input, _output)]
 
 # construct the block
 _prev_hash = block_chain.get_last_block().get_hash()
@@ -35,7 +40,6 @@ block_chain.add_new_block(block2)
 # Third Block
 _version = 1
 _prev_hash = block_chain.get_last_block().get_hash()
-_merkle_root = None
 _timestamp = "101010"
 _difficulty_target = 1
 _nonce = "10"
@@ -45,18 +49,16 @@ block3 = proof_of_work(_prev_hash, _transactions, _public_key1)
 block_chain.add_new_block(block3)
 
 # Fourth Block
-_version = 1
 _prev_hash = block_chain.get_last_block().get_hash()
-_merkle_root = None
-_timestamp = "101010"
-_difficulty_target = 1
-_nonce = "10"
 _transactions = []
 
 block4 = proof_of_work(_prev_hash, _transactions, _public_key1)
 block_chain.add_new_block(block4)
 
-print(block_chain.validate_block_chain())
+
+# Writes blockchain data to database! :D
+a = TestDataBase(block_chain)
+
 
 
 def get_dummy_chain():

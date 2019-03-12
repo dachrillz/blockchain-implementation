@@ -9,11 +9,12 @@ def hash_cash(block):
     :return: The string that solves the proof of work problem
     """
 
-    guess = b'\0'
+    guess = 0
 
     while not proof_of_work_solved(block):
         block.nonce = guess
-        guess = os.urandom(32)
+        guess = int.from_bytes(os.urandom(32), byteorder='big')
+
     return guess
 
 

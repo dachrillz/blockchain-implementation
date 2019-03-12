@@ -44,7 +44,7 @@ class Transaction:
     """
 
     def __init__(self, list_of_inputs, list_of_outputs):
-        self.nonce = urandom(32)  # Added since Coinbase transactions are normal transactions, this reduces risk of hash collision.
+        self.nonce = int.from_bytes(urandom(32), byteorder='big')  # Added since Coinbase transactions are normal transactions, this reduces risk of hash collision.
         self.version = _version
 
         self.list_of_inputs = list_of_inputs
@@ -57,7 +57,7 @@ class Transaction:
 
     def __hash__(self):
 
-        string_to_hash = str(self.version) + str(int.from_bytes(self.nonce, byteorder='big'))
+        string_to_hash = str(self.version) + str(self.nonce)
 
         for item in self.list_of_inputs:
             string_to_hash += str(item.txid) + str(item.index) + str(item.scriptSig)

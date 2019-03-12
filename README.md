@@ -4,12 +4,14 @@
 [![codecov](https://codecov.io/gh/dachrillz/blockchain-implementation/branch/master/graph/badge.svg)](https://codecov.io/gh/dachrillz/blockchain-implementation)
 
 # Current goals
-1. Verify unspent outputs!!!!!!!
-2. Next up should be ability to make request transactions to the blockchain. Thas is:
-1. write the I/O for the terminal in order to make transactions
-2. might require the coinbase to be implemented in the transactions
-3. add ability to add transactions to the blocks.
-4. don't forget to write tests!
+
+I stopped at writing the json interface. Nonces need to be converted
+to ints in order to be serializable!
+Write tests for the serializer!
+
+1. Write an interface for the block explorer
+2. Write a simple wallet
+3. Verify that an incoming transaction is correct
 
 
 # Later goals
@@ -22,3 +24,4 @@
 9. handle when there is transation id collisions.
 10. Handle when the script machine crashes
 11. Difficulty is spread all over and needs to be figured out
+12. Block explorer functions do a lot of redundant calculations, they need to be optimized later.
