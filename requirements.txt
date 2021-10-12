@@ -6,7 +6,7 @@ chardet==3.0.4
 codecov==2.0.15
 coverage==4.5.1
 ecdsa==0.13
-fastecdsa==1.6.5
+fastecdsa==2.1.2
 idna==2.7
 more-itertools==4.3.0
 pluggy==0.8.0
